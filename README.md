@@ -1,17 +1,8 @@
 # Inoreader Agent Skills
 
-This repository contains skills and tools to integrate your AI agent (specifically designed for Hermes Agent framework) with your Inoreader account.
+This repository contains skills and tools to integrate your AI agent (specifically designed for Hermes Agent framework) with your Inoreader data.
 
-There are currently two distinct skills included:
-
-## 1. Online Library Manager (API Based)
-A skill that connects to the live Inoreader API, allowing the agent to save (star) or remove articles from your library on the fly.
-* **Skill**: `inoreader-skill.md`
-* **Tool**: `inoreader_skill.py`
-* **Requires**: Inoreader Premium/Pro tier (for API access).
-* **Setup**: Requires `INOREADER_APP_ID`, `INOREADER_APP_KEY`, and `INOREADER_ACCESS_TOKEN` in your environment.
-
-## 2. Offline Library Search (JSON/SQLite Based)
+## 1. Offline Library Search (JSON/SQLite Based)
 A skill that allows the agent to search through your entire historical reading archive locally. This is perfect for Free Tier users who cannot access the live API, or for using your Inoreader history as a RAG (Retrieval-Augmented Generation) knowledge base for research.
 * **Skill**: `inoreader-search-skill.md`
 * **Tool**: `inoreader_search_tool.py`
