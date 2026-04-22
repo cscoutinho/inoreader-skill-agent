@@ -1,23 +1,32 @@
-# Inoreader Agent Skill
+# Inoreader Agent Skills
 
-This repository contains a skill and tool implementation designed to allow an AI Agent (e.g., using the Hermes Agent harness) to interact with a user's Inoreader library.
+This repository contains skills and tools to integrate your AI agent (specifically designed for Hermes Agent framework) with your Inoreader account.
 
-## Components
+There are currently two distinct skills included:
 
-The architecture is split into two components:
+## 1. Online Library Manager (API Based)
+A skill that connects to the live Inoreader API, allowing the agent to save (star) or remove articles from your library on the fly.
+* **Skill**: `inoreader-skill.md`
+* **Tool**: `inoreader_skill.py`
+* **Requires**: Inoreader Premium/Pro tier (for API access).
+* **Setup**: Requires `INOREADER_APP_ID`, `INOREADER_APP_KEY`, and `INOREADER_ACCESS_TOKEN` in your environment.
 
-1. **`inoreader-skill.md`**: The Procedural Memory (Skill). This markdown file teaches the agent *how* to save or remove an article from the Inoreader library. It outlines the procedure, determining if an article should be starred (saved) or unstarred (removed), and maps it to the tool execution.
-2. **`inoreader_skill.py`**: The Deterministic Tool. This Python script implements the actual API request to Inoreader. It handles authentication and the network request to the `edit-tag` endpoint.
+## 2. Offline Library Search (JSON/SQLite Based)
+A skill that allows the agent to search through your entire historical reading archive locally. This is perfect for Free Tier users who cannot access the live API, or for using your Inoreader history as a RAG (Retrieval-Augmented Generation) knowledge base for research.
+* **Skill**: `inoreader-search-skill.md`
+* **Tool**: `inoreader_search_tool.py`
+* **Requires**: A JSON export of your Inoreader "Starred" or "Read" items.
 
-## Setup
+### Setup for Offline Search:
+1. Export your Inoreader data to a JSON file (e.g., `starred.json`).
+2. Update the `JSON_FILE` path inside `inoreader_db_builder.py` to point to your downloaded file.
+3. Run the database builder script to convert the JSON into a high-speed SQLite Full-Text Search database:
+   ```bash
+   python inoreader_db_builder.py
+   ```
+4. This will generate `inoreader_archive.db`. Ensure this file is accessible to your agent's environment.
+5. Register `inoreader_search_tool.py` and `inoreader-search-skill.md` with your agent.
 
-1. **Agent Skill Registry**: Place `inoreader-skill.md` in your agent's `skills/` folder so it can learn the procedural workflow.
-2. **Agent Tool Registry**: Expose the logic inside `inoreader_skill.py` to your agent using OpenAI-style JSON function calling. 
-3. **Authentication**: You will need to supply three credentials to the Python tool:
-   - `APP_ID`: Your Inoreader Developer App ID.
-   - `APP_KEY`: Your Inoreader Developer App Key.
-   - `ACCESS_TOKEN`: The user's OAuth 2.0 access token.
-
-## How it Works
-
-When a user asks to "save" an article, the agent loads the skill, figures out the necessary parameters, and executes the python tool, adding the system tag `user/-/state/com.google/starred` to the item in Inoreader.
+## General Agent Setup
+- **Skills**: Drop the `.md` files into your agent's `skills` folder.
+- **Tools**: Register the Python functions and JSON schemas in your agent's tool registry.
